@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
     password: {type: String, required: true},
     role: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Role', required: true
+        ref: 'Role'
     },
     department: {
         type: mongoose.Schema.Types.ObjectId,
@@ -14,8 +14,14 @@ const UserSchema = new mongoose.Schema({
     },
     answers: {
         type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Answer'
+        ref: 'Answer',
+        default: []
     },
+    subordinates: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'User',
+        default: []
+    }
 }, {
     timestamps: true
 });

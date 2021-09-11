@@ -11,7 +11,7 @@ class AuthService {
 
 	async validateUser(email) {
 		try {
-			const user = await this.userService.findOne(email);
+			const user = await this.userService.findByEmail(email);
 			if (user) {
 				return user;
 			}
