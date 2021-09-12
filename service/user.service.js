@@ -1,12 +1,16 @@
 import {userModel} from "../model/user.model.js";
 import {departmentModel} from "../model/department.model.js";
+import {answerModel} from "../model/answer.model.js";
 
-class UserService {
+class AnswerService {
 	constructor() {
 		this.findOne = this.findOne.bind(this);
 		this.find = this.find.bind(this);
 		this.create = this.create.bind(this);
 		this.findByEmail = this.findByEmail.bind(this);
+		this.update = this.update.bind(this);
+		this.createCondition = this.createCondition.bind(this);
+		this.addSubordinates = this.addSubordinates.bind(this);
 	}
 
 	async findByEmail(email) {
@@ -60,6 +64,67 @@ class UserService {
 			throw Error(e);
 		}
 	}
+
+	async update({id, body}) {
+		try {
+			const userUpdate = await this.createCondition({body});
+			console.log(userUpdate);
+			return await userModel.updateOne({id}, {
+				$set: userUpdate
+			}).exec();
+		} catch (e) {
+			console.error(`AnswerService.findOne ex ${e}`);
+			throw Error(e);
+		}
+	}
+
+	async addSubordinates(id, body) {
+		try {
+			const userUpdate = await this.createCondition({body});
+			console.log(userUpdate);
+			return await userModel.updateOne({id}, {
+				$push: {
+					subordinates: body.subordinates
+				}
+			}).exec();
+		} catch (e) {
+			console.error(`AnswerService.findOne ex ${e}`);
+			throw Error(e);
+		}
+	}
+
+	 async createCondition({body}) {
+		try {
+			const userUpdate = {};
+
+			if (body.name) {
+				userUpdate.name = body.name;
+			}
+
+			if (body.email) {
+				userUpdate.email = body.email
+			}
+
+			if (body.department) {
+				userUpdate.department = body.department;
+			}
+
+			if (body.password) {
+				userUpdate.password = body.password
+			}
+
+			if (body.roleId) {
+				const role = await roleModel.findById(body.roleId).exec();
+				console.log(role._id);
+				userUpdate.role = role;
+			}
+			return userUpdate;
+
+		} catch (e) {
+			console.error(`userService.createCondition ex ${e}`);
+			throw Error(e);
+		}
+	}
 }
 
-export default UserService;
+export default AnswerService;

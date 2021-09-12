@@ -8,6 +8,8 @@ class UserController {
         this.findOne = this.findOne.bind(this);
         this.getSubordinates = this.getSubordinates.bind(this);
         this.create = this.create.bind(this);
+        this.update = this.update.bind(this);
+        this.addSubordinates = this.addSubordinates.bind(this);
     }
 
     async findOne(req, res) {
@@ -26,10 +28,10 @@ class UserController {
         try {
             const userService = new this.userService();
             const user = await userService.find();
-            return res.json({ user });
+            return res.status(200).json({ user });
         } catch (e) {
             console.error(`UserController.find ex ${e.message}`);
-            return res.json({ error: e.message });
+            return res.status(400).json({ error: e.message });
         }
     }
 
@@ -52,6 +54,30 @@ class UserController {
             return res.json({ user });
         } catch (e) {
             console.error(`UserController.create ex ${e.message}`);
+            return res.json({ error: e.message });
+        }
+    }
+
+    async update(req, res) {
+        try {
+            const userService = new this.userService();
+            console.log('UserController.update body', req.body)
+            const user = await userService.update({id: req.params.userId, body: req.body});
+            return res.json({ user });
+        } catch (e) {
+            console.error(`UserController.update ex ${e.message}`);
+            return res.json({ error: e.message });
+        }
+    }
+
+    async addSubordinates(req, res) {
+        try {
+            const userService = new this.userService();
+            console.log('UserController.addSubordinates body', req.body)
+            const user = await userService.addSubordinates(req.params.userId, req.body);
+            return res.json({ user });
+        } catch (e) {
+            console.error(`UserController.addSubordinates ex ${e.message}`);
             return res.json({ error: e.message });
         }
     }

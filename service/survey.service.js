@@ -1,22 +1,13 @@
 import {departmentModel} from "../model/department.model.js";
 import {surveyModel} from "../model/survey.model.js";
-import {roleModel} from "../model/role.model";
+import {roleModel} from "../model/role.model.js";
+import {answerModel} from "../model/answer.model.js";
 
 class SurveyService {
     constructor() {
         this.findOne = this.findOne.bind(this);
         this.find = this.find.bind(this);
         this.create = this.create.bind(this);
-        this.findByDepartment = this.findByDepartment.bind(this);
-    }
-
-    async findByDepartment(departmentId) {
-        try {
-            return await surveyModel.findOne({department: departmentId}).exec();
-        } catch (e) {
-            console.error(`SurveyService.findByDepartment ex ${e}`);
-            throw Error(e);
-        }
     }
 
     async findOne(id) {
@@ -39,23 +30,31 @@ class SurveyService {
 
     async create(body) {
         try {
-            const department = await departmentModel.findById(body.departmentId).exec();
             const role = await roleModel.findById(body.roleId).exec();
 
             const survey = new surveyModel({
                 name: body.name,
-                department: department,
                 role: role,
                 questions: body.questions
             });
 
             const saved = await survey.save();
+
+            await departmentModel.findByIdAndUpdate({
+                _id: body.departmentId
+            }, {
+                $push: {
+                    surveys: saved._id
+                }
+            }).exec();
+
             console.log('saved', saved);
         } catch (e) {
             console.error(`SurveyService.create ex ${e}`);
             throw Error(e);
         }
     }
+
 }
 
 export default SurveyService;

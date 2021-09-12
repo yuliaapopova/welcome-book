@@ -14,4 +14,4 @@ const SurveySchema = new mongoose.Schema({
     timestamps: true
 });
 
-export const surveyModel = mongoose.model('Department', SurveySchema);
+export const surveyModel = mongoose.model('Survey', SurveySchema);

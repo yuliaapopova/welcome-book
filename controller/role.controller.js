@@ -35,7 +35,7 @@ class RoleController {
     async create(req, res) {
         try {
             const roleService = new this.roleService();
-            const roe = await roleService.create(req.body);
+            const role = await roleService.create(req.body);
             return res.json({ role });
         } catch (e) {
             console.error(`RoleController.create ex ${e.message}`);

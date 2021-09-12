@@ -3,6 +3,8 @@ import authRouter from './auth.router.js';
 import departmentRouter from './department.router.js';
 import userRouter from './user.router.js';
 import roleRouter from './role.router.js';
+import surveyRouter from './survey.router.js';
+import answerRouter from './answer.router.js'
 
 const router = express.Router();
 
@@ -12,7 +14,9 @@ router.get('/', (req, res) => {
 })
 router.use('/api/departments', departmentRouter);
 router.use('/api/users', userRouter);
-router.use('/api/role', roleRouter);
+router.use('/api/roles', roleRouter);
+router.use('/api/survey', surveyRouter);
+router.use('/api/answers', answerRouter);
 
 export default router;
 

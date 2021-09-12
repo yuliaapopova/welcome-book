@@ -7,6 +7,7 @@ class AuthService {
 		this.validateUser = this.validateUser.bind(this);
 		this.isValidPassword = this.isValidPassword.bind(this);
 		this.createToken = this.createToken.bind(this);
+		this.checkRights = this.checkRights.bind(this);
 	}
 
 	async validateUser(email) {
@@ -33,7 +34,7 @@ class AuthService {
 
 	async createToken(user) {
 		try {
-			const payload = { id: user.id, email: user.email };
+			const payload = { id: user.id, email: user.email, role: user.role };
 			const token = jwt.sign(payload, 'welcomeBook', { expiresIn: '6h' });
 			console.log('token', token)
 			return {
@@ -41,6 +42,20 @@ class AuthService {
 			};
 		} catch (e) {
 			console.error(`AuthService.createToken ex ${e.message}`);
+			throw Error(e.message);
+		}
+	}
+
+	async checkRights(user) {
+		try {
+			const payload = { id: user.id, email: user.email, isAdmin: user.isAdmin };
+			const token = jwt.sign(payload, 'welcomeBook', { expiresIn: '6h' });
+			console.log('token', token)
+			return {
+				token: token
+			};
+		} catch (e) {
+			console.error(`AuthService.checkRights ex ${e.message}`);
 			throw Error(e.message);
 		}
 	}
